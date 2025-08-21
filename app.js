@@ -1,7 +1,8 @@
 require("dotenv").config(); // loads .env variables
 const express = require("express");
-const usersRouter = require("./routes/users")
 const pool = require("./db");
+const usersRouter = require("./routes/users");
+const massagesRouter = require("./routes/massages");
 
 const app = express();
 app.use(express.json());
@@ -10,6 +11,9 @@ const port = 3000;
 
 // mount the user routes
 app.use("/users", usersRouter);
+
+// mount the massages routes
+app.use("/", massagesRouter);
 
 // homepage route - checks that database is connected
 app.get("/", async (req, res) => {
