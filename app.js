@@ -13,7 +13,7 @@ const port = 3000;
 app.use("/users", usersRouter);
 
 // mount the massages routes
-app.use("/", massagesRouter);
+app.use("/massages", massagesRouter);
 
 // homepage route - checks that database is connected
 app.get("/", async (req, res) => {

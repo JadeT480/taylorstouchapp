@@ -3,7 +3,7 @@ const router = express.Router();
 const pool = require("../db");
 
 /* Get all massages available */
-router.get("/massages", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const result = await pool.query("SELECT * FROM massages");
     res.json(result.rows);
@@ -13,7 +13,7 @@ router.get("/massages", async (req, res, next) => {
 });
 
 /* Get a single massage */
-router.get("/massages/:massage_id", async (req, res, next) => {
+router.get("/:massage_id", async (req, res, next) => {
   try {
     const { massage_id } = req.params;
     const result = await pool.query(

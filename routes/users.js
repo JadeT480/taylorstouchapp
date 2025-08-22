@@ -105,7 +105,7 @@ router.post("/login", async (req, res) => {
 });
 
 /* Get all users */
-router.get("/users", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const result = await pool.query("SELECT * FROM users");
     res.json(result.rows);
@@ -115,7 +115,7 @@ router.get("/users", async (req, res, next) => {
 });
 
 /* Get a single user */
-router.get("/users/:user_id", async (req, res, next) => {
+router.get("/:user_id", async (req, res, next) => {
   try {
     const { user_id } = req.params;
     const result = await pool.query(
@@ -133,7 +133,7 @@ router.get("/users/:user_id", async (req, res, next) => {
 });
 
 /* Update a user's password */
-router.put("/users/:user_id/password", async (req, res) => {
+router.put("/:user_id/password", async (req, res) => {
   const { user_id } = req.params;
   const { password } = req.body;
 
@@ -147,8 +147,8 @@ router.put("/users/:user_id/password", async (req, res) => {
     const result = await pool.query(
       `UPDATE users
        SET password_hash = $1
-       WHERE id = $2
-       RETURNING id`,
+       WHERE user_id = $2
+       RETURNING user_id`,
       [password_hash, user_id]
     );
 
@@ -157,6 +157,64 @@ router.put("/users/:user_id/password", async (req, res) => {
     }
       
     res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+/* Update a user's phone number */
+router.put("/:user_id/phone", async (req, res) => {
+  const { user_id } = req.params;
+  const { phone } = req.body;
+
+  if (!phone) {
+    return res.status(400).json({ message: "Phone number is required" });
+  }
+
+  try {
+    const result = await pool.query(
+      `UPDATE users
+       SET phone = $1
+       WHERE id = $2
+       RETURNING id`,
+      [phone, user_id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+      
+    res.json({ message: "Phone number updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+/* Update a user's health notes */
+router.put("/:user_id/health_notes", async (req, res) => {
+  const { user_id } = req.params;
+  const { health_notes } = req.body;
+
+  if (!health_notes) {
+    return res.status(400).json({ message: "Field is required" });
+  }
+
+  try {
+    const result = await pool.query(
+      `UPDATE users
+       SET health_notes = $1
+       WHERE id = $2
+       RETURNING id`,
+      [health_notes, user_id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+      
+    res.json({ message: "Notes updated successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
