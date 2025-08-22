@@ -132,4 +132,35 @@ router.get("/users/:user_id", async (req, res, next) => {
   }
 });
 
+/* Update a user's password */
+router.put("/users/:user_id/password", async (req, res) => {
+  const { user_id } = req.params;
+  const { password } = req.body;
+
+  if (!password) {
+    return res.status(400).json({ message: "Password is required" });
+  }
+
+  try {
+    const password_hash = await hashPassword(password);
+
+    const result = await pool.query(
+      `UPDATE users
+       SET password_hash = $1
+       WHERE id = $2
+       RETURNING id`,
+      [password_hash, user_id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+      
+    res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 module.exports = router;
