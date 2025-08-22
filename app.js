@@ -3,6 +3,7 @@ const express = require("express");
 const pool = require("./db");
 const usersRouter = require("./routes/users");
 const massagesRouter = require("./routes/massages");
+const bookingsRouter = require("./routes/bookings");
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,9 @@ app.use("/users", usersRouter);
 
 // mount the massages routes
 app.use("/massages", massagesRouter);
+
+// mount the bookings routes
+app.use("/bookings", bookingsRouter);
 
 // homepage route - checks that database is connected
 app.get("/", async (req, res) => {

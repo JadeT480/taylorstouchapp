@@ -176,8 +176,8 @@ router.put("/:user_id/phone", async (req, res) => {
     const result = await pool.query(
       `UPDATE users
        SET phone = $1
-       WHERE id = $2
-       RETURNING id`,
+       WHERE user_id = $2
+       RETURNING user_id`,
       [phone, user_id]
     );
 
@@ -205,8 +205,8 @@ router.put("/:user_id/health_notes", async (req, res) => {
     const result = await pool.query(
       `UPDATE users
        SET health_notes = $1
-       WHERE id = $2
-       RETURNING id`,
+       WHERE user_id = $2
+       RETURNING user_id`,
       [health_notes, user_id]
     );
 
