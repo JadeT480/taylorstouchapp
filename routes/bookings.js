@@ -44,4 +44,32 @@ router.post("/checkout", async (req, res, next) => {
   }
 });
 
+/* Get all bookings */
+router.get("/", async (req, res, next) => {
+  try {
+    const result = await pool.query("SELECT * FROM bookings");
+    res.json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/* Get a single booking */
+router.get("/:booking_id", async (req, res, next) => {
+  try {
+    const { booking_id } = req.params;
+    const result = await pool.query(
+      "SELECT * FROM bookings WHERE booking_id = $1",
+      [booking_id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
