@@ -55,7 +55,7 @@ router.get("/", async (req, res, next) => {
 });
 
 /* Get a single booking */
-router.get("/:booking_id", async (req, res, next) => {
+router.get("/:booking-id", async (req, res, next) => {
   try {
     const { booking_id } = req.params;
     const result = await pool.query(
